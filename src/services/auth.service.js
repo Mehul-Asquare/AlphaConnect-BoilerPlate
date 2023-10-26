@@ -6,18 +6,34 @@ const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
 /**
- * Login with username and password
- * @param {string} email
- * @param {string} password
+ * Register or login with mobile number
+ * @param {string} mobile
  * @returns {Promise<User>}
  */
-const loginUserWithEmailAndPassword = async (mobile) => {
-  const user = await userService.getUserByMobile(mobile);
+const registerOrLoginWithMobile = async (mobile) => {
+  let user = await userService.getUserByMobile(mobile);
+  
   if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not Found');
+    // If the user does not exist, register them
+    user = await userService.createUser({ mobile });
   }
+  
   return user;
 };
+
+// /**
+//  * Login with username and password
+//  * @param {string} email
+//  * @param {string} password
+//  * @returns {Promise<User>}
+//  */
+// const loginUserWithEmailAndPassword = async (mobile) => {
+//   const user = await userService.getUserByMobile(mobile);
+//   if (!user) {
+//     throw new ApiError(httpStatus.UNAUTHORIZED, 'User not Found');
+//   }
+//   return user;
+// };
 
 /**
  * Logout
@@ -91,7 +107,8 @@ const verifyEmail = async (verifyEmailToken) => {
 };
 
 module.exports = {
-  loginUserWithEmailAndPassword,
+  registerOrLoginWithMobile,
+  // loginUserWithEmailAndPassword,
   logout,
   refreshAuth,
   resetPassword,
