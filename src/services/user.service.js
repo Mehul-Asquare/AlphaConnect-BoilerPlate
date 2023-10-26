@@ -74,8 +74,6 @@ const updateCoverImage = async (userId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  // Update the user's coverImage field with the new cover image
-  // user.coverImage = coverImage;
   Object.assign(user, updateBody);
   await user.save();
   return user;
